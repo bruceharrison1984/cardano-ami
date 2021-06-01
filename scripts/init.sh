@@ -50,6 +50,16 @@ echo -e "\n-= Configure OS auto-updates"
 sudo apt-get autoremove
 sudo apt-get autoclean
 
-echo "-= Create Cardano User =-"
+echo -e "\n-= Create Cardano User =-"
 sudo useradd -m -s /bin/bash cardano
 sudo usermod -aG sudo cardano
+
+echo -e "\n-= Install Cloudwatch Agent =-"
+sudo mkdir -p /opt/aws/amazon-cloudwatch-agent/etc/
+sudo cp /setup_scripts/amazon-cloudwatch-agent.json ${CLOUDWATCH_CONFIG}
+curl -o ~/amazon-cloudwatch-agent.deb https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb
+dpkg -i -E ~/amazon-cloudwatch-agent.deb
+usermod -aG adm cwagent
+
+echo -e "\n-= Start Cloudwatch Agent =-"
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:${CLOUDWATCH_CONFIG}
