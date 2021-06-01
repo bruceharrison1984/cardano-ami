@@ -1,29 +1,30 @@
 locals { timestamp = regex_replace(timestamp(), "[- TZ:]", "") }
 
-source "amazon-ebs" "rhel8" {
+source "amazon-ebs" "ubuntu" {
   ami_name        = "cardano-node-${local.timestamp}"
   ami_description = "Provisioned AMI for running a Cardano cluster"
   instance_type   = "m5.4xlarge"
   region          = "us-east-1"
   ena_support     = true
-  ssh_username    = "ec2-user"
+  ssh_username    = "ubuntu"
   encrypt_boot    = true
   ebs_optimized   = true
 
   launch_block_device_mappings {
     device_name = "/dev/sda1"
-    volume_size = 50
+    volume_size = 100
     encrypted = true
   }
   
+  ## use offical Ubuntu AMI to start
   source_ami_filter {
     filters = {
-      name                = "RHEL-8.*_HVM-*-x86_64-0-Hourly2-GP2"
+      name                = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
     most_recent = true
-    owners      = ["309956199498"]
+    owners      = ["099720109477"]
   }
 
   tags = {
@@ -36,20 +37,20 @@ source "amazon-ebs" "rhel8" {
 }
 
 build {
-  sources = ["source.amazon-ebs.rhel8"]
+  sources = ["source.amazon-ebs.ubuntu"]
   provisioner "shell" {
-    inline = ["mkdir /home/ec2-user/setup_scripts/"]
+    inline = ["mkdir /home/ubuntu/setup_scripts/"]
   }
   provisioner "file" {
-    destination = "/home/ec2-user/setup_scripts/"
+    destination = "/home/ubuntu/setup_scripts/"
     source      = "./scripts/"
   }
   provisioner "shell" {
     inline = [
       "chmod -R +x ~/setup_scripts/*.sh",
       "~/setup_scripts/init.sh",
-      "sudo -i -u cardano -H sh -c '/setup_scripts/install-guild-operators.sh'",
-      "sudo -i -u cardano -H sh -c '/setup_scripts/install-cardano.sh'"
+      "/setup_scripts/cabal.sh",
+      "/setup_scripts/libsodium.sh"
     ]
   }
 }
