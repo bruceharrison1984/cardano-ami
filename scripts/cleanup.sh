@@ -2,6 +2,6 @@
 set -e
 
 echo -e "\n-= Deleting Build files =-"
-rm ${HOME}/git
-rm ${HOME}/.cabal
-rm ${HOME}/.ghcup
+rm -rf ${HOME}/git
+rm -rf  ${HOME}/.cabal
+rm -rf  ${HOME}/.ghcup
