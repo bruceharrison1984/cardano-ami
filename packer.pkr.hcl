@@ -50,7 +50,9 @@ build {
       "chmod -R +x ~/setup_scripts/*.sh",
       "~/setup_scripts/init.sh",
       "/setup_scripts/cabal.sh",
-      "/setup_scripts/libsodium.sh"
+      "/setup_scripts/libsodium.sh",
+      "/setup_scripts/cardano-node.sh",
+      "exit 1"
     ]
   }
 }
