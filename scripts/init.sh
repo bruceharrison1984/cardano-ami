@@ -61,7 +61,7 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-c
 
 echo -e "\n-= Setup Cardano Env Vars =-"
 echo export LD_LIBRARY_PATH="/usr/local/lib:${LD_LIBRARY_PATH}" >> ${HOME}/.profile
-echo export NODE_HOME=${HOME}/cardano-my-node >> ${HOME}/.profile
+echo export NODE_HOME=${HOME}/cardano >> ${HOME}/.profile
 echo export NODE_CONFIG=mainnet >> ${HOME}/.profile
 echo export CABAL_PATH=${HOME}/.cabal/bin/ >> ${HOME}/.profile
 echo export PATH="${HOME}/.ghcup/bin/:${CABAL_PATH}:${PATH}" >> ${HOME}/.profile

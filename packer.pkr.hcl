@@ -52,6 +52,8 @@ build {
       "/setup_scripts/cabal.sh",
       "/setup_scripts/libsodium.sh",
       "/setup_scripts/cardano-node.sh",
+      "/setup_scripts/extras.sh",
+      "/setup_scripts/cleanup.sh",
       "exit 1"
     ]
   }
