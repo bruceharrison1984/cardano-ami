@@ -57,9 +57,17 @@ sudo usermod -aG sudo cardano
 echo -e "\n-= Install Cloudwatch Agent =-"
 sudo mkdir -p /opt/aws/amazon-cloudwatch-agent/etc/
 sudo cp /setup_scripts/amazon-cloudwatch-agent.json ${CLOUDWATCH_CONFIG}
-curl -o ~/amazon-cloudwatch-agent.deb https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb
-dpkg -i -E ~/amazon-cloudwatch-agent.deb
-usermod -aG adm cwagent
+sudo curl -o ~/amazon-cloudwatch-agent.deb https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb
+sudo dpkg -i -E ~/amazon-cloudwatch-agent.deb
+sudo usermod -aG adm cwagent
 
 echo -e "\n-= Start Cloudwatch Agent =-"
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:${CLOUDWATCH_CONFIG}
+
+echo "-= Setup Cardano Env Vars =-"
+echo PATH="~/.cabal/bin/:~/.ghcup/bin/:$PATH" >> ~/.bashrc
+echo export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH" >> ~/.bashrc
+echo export NODE_HOME=~/cardano-my-node >> ~/.bashrc
+echo export NODE_CONFIG=mainnet>> ~/.bashrc
+echo export CABAL_PATH=~/.cabal/bin >> ~/.bashrc
+echo export NODE_BUILD_NUM=$(curl https://hydra.iohk.io/job/Cardano/iohk-nix/cardano-deployment/latest-finished/download/1/index.html | grep -e "build" | sed 's/.*build\/\([0-9]*\)\/download.*/\1/g') >> ~/.bashrc
